@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PEUGEOT — Motion &amp; Emotion</title>
+  <style>
+    :root {
+      --bg: #050507;
+      --bg2: #0b0b10;
+      --ink: #f4f4f2;
+      --mut: #8a8a93;
+      --lion: #00e5a0;
+      --blue: #2e6bff;
+      --line: rgba(255, 255, 255, .08);
+      --serif: 'Georgia', serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    html {
+      scroll-behavior: auto
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      overflow-x: hidden
+    }
+
+    ::selection {
+      background: var(--lion);
+      color: #000
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg)
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #2a2a33;
+      border-radius: 3px
+    }
+
+    /* ---------- LOADER ---------- */
+    #loader {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 18px
+    }
+
+    #loader .lion {
+      font-size: 64px;
+      filter: grayscale(1) brightness(2)
+    }
+
+    #loader h1 {
+      font-size: clamp(28px, 5vw, 54px);
+      letter-spacing: .45em;
+      font-weight: 200;
+      text-indent: .45em
+    }
+
+    #loader .bar {
+      width: 220px;
+      height: 1px;
+      background: #222;
+      overflow: hidden
+    }
+
+    #loader .bar i {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: var(--lion)
+    }
+
+    /* ---------- NAV ---------- */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 22px 48px;
+      mix-blend-mode: difference;
+      opacity: 0;
+      transition: opacity .8s
+    }
+
+    nav.on {
+      opacity: 1
+    }
+
+    nav .logo {
+      font-weight: 200;
+      letter-spacing: .4em;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 12px
+    }
+
+    nav .logo span {
+      font-size: 22px
+    }
+
+    nav ul {
+      display: flex;
+      gap: 34px;
+      list-style: none
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 11px;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      opacity: .75;
+      transition: opacity .3s
+    }
+
+    nav a:hover {
+      opacity: 1
+    }
+
+    /* ---------- HERO ---------- */
+    #hero {
+      height: 100vh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      perspective: 1200px
+    }
+
+    #hero .bg {
+      position: absolute;
+      inset: -8%;
+      background: radial-gradient(ellipse 60% 45% at 50% 62%, rgba(46, 107, 255, .16), transparent 65%)
+    }
+
+    #hero .car {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      will-change: transform
+    }
+
+    #hero .car img {
+      width: min(88vw, 1150px);
+      filter: drop-shadow(0 60px 80px rgba(0, 0, 0, .9));
+      border-radius: 8px;
+      -webkit-mask-image: radial-gradient(ellipse 78% 70% at 50% 50%, #000 55%, transparent 78%);
+      mask-image: radial-gradient(ellipse 78% 70% at 50% 50%, #000 55%, transparent 78%)
+    }
+
+    #hero .title {
+      position: relative;
+      z-index: 5;
+      text-align: center;
+      pointer-events: none
+    }
+
+    #hero .title .kicker {
+      font-size: 12px;
+      letter-spacing: .6em;
+      text-transform: uppercase;
+      color: var(--lion);
+      margin-bottom: 16px;
+      text-indent: .6em
+    }
+
+    #hero .title h2 {
+      font-size: clamp(56px, 12vw, 180px);
+      font-weight: 800;
+      letter-spacing: -.02em;
+      line-height: .92;
+      mix-blend-mode: overlay;
+      color: #fff
+    }
+
+    #hero .title h2 .row {
+      display: block;
+      overflow: hidden
+    }
+
+    #hero .title h2 .row span {
+      display: inline-block;
+      transform: translateY(110%)
+    }
+
+    #hero .scrollcue {
+      position: absolute;
+      bottom: 34px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 10px;
+      letter-spacing: .4em;
+      text-transform: uppercase;
+      color: var(--mut);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px
+    }
+
+    #hero .scrollcue i {
+      width: 1px;
+      height: 46px;
+      background: linear-gradient(#fff, transparent);
+      display: block;
+      animation: drip 1.8s infinite
+    }
+
+    @keyframes drip {
+      0% {
+        transform: scaleY(0);
+        transform-origin: top
+      }
+
+      45% {
+        transform: scaleY(1);
+        transform-origin: top
+      }
+
+      55% {
+        transform: scaleY(1);
+        transform-origin: bottom
+      }
+
+      100% {
+        transform: scaleY(0);
+        transform-origin: bottom
+      }
+    }
+
+    /* ---------- MARQUEE ---------- */
+    .marquee {
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 20px 0;
+      overflow: hidden;
+      white-space: nowrap;
+      background: var(--bg2)
+    }
+
+    .marquee .track {
+      display: inline-block;
+      animation: mq 26s linear infinite
+    }
+
+    .marquee span {
+      font-size: 15px;
+      letter-spacing: .5em;
+      text-transform: uppercase;
+      color: var(--mut);
+      margin-right: 70px
+    }
+
+    .marquee span em {
+      font-style: normal;
+      color: var(--lion)
+    }
+
+    @keyframes mq {
+      to {
+        transform: translateX(-50%)
+      }
+    }
+
+    /* ---------- MODEL SECTIONS ---------- */
+    .model {
+      min-height: 100vh;
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 0;
+      padding: 12vh 6vw;
+      overflow: hidden
+    }
+
+    .model::before {
+      content: attr(data-num);
+      position: absolute;
+      top: 8vh;
+      right: 5vw;
+      font-size: clamp(120px, 22vw, 320px);
+      font-weight: 800;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(255, 255, 255, .06);
+      line-height: 1;
+      pointer-events: none
+    }
+
+    .model .info {
+      max-width: 520px;
+      position: relative;
+      z-index: 6
+    }
+
+    .model .info .tag {
+      font-size: 11px;
+      letter-spacing: .5em;
+      text-transform: uppercase;
+      color: var(--lion);
+      margin-bottom: 18px
+    }
+
+    .model .info h3 {
+      font-size: clamp(44px, 6vw, 92px);
+      font-weight: 800;
+      line-height: .95;
+      margin-bottom: 26px
+    }
+
+    .model .info h3 small {
+      display: block;
+      font-size: .35em;
+      font-weight: 300;
+      letter-spacing: .3em;
+      color: var(--mut);
+      margin-top: 10px
+    }
+
+    .model .info p {
+      color: var(--mut);
+      line-height: 1.75;
+      font-size: 15px;
+      margin-bottom: 34px
+    }
+
+    .specs {
+      display: flex;
+      gap: 38px;
+      margin-bottom: 38px
+    }
+
+    .specs div b {
+      font-size: 30px;
+      font-weight: 700;
+      display: block
+    }
+
+    .specs div b sup {
+      font-size: 12px;
+      color: var(--lion);
+      font-weight: 400;
+      margin-left: 3px
+    }
+
+    .specs div s {
+      text-decoration: none;
+      font-size: 10px;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--mut)
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid rgba(255, 255, 255, .25);
+      padding: 16px 30px;
+      font-size: 11px;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: color .4s, border-color .4s
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--lion);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .45s cubic-bezier(.7, 0, .2, 1);
+      z-index: -1
+    }
+
+    .btn:hover {
+      color: #000;
+      border-color: var(--lion)
+    }
+
+    .btn:hover::before {
+      transform: scaleX(1)
+    }
+
+    .btn .arr {
+      transition: transform .4s
+    }
+
+    .btn:hover .arr {
+      transform: translateX(6px)
+    }
+
+    /* --- car stage: 3D tilt + hotspots --- */
+    .stage {
+      position: relative;
+      perspective: 1400px;
+      z-index: 5
+    }
+
+    .stage .card {
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform .18s ease-out;
+      will-change: transform
+    }
+
+    .stage img.carimg {
+      width: 100%;
+      border-radius: 10px;
+      display: block;
+      filter: drop-shadow(0 45px 60px rgba(0, 0, 0, .85));
+      -webkit-mask-image: radial-gradient(ellipse 82% 74% at 50% 50%, #000 58%, transparent 80%);
+      mask-image: radial-gradient(ellipse 82% 74% at 50% 50%, #000 58%, transparent 80%)
+    }
+
+    .stage .glow {
+      position: absolute;
+      inset: auto 8% -6% 8%;
+      height: 34%;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(46, 107, 255, .22), transparent 70%);
+      filter: blur(20px);
+      transform: translateZ(-60px)
+    }
+
+    .hotspot {
+      position: absolute;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, .55);
+      background: rgba(5, 5, 10, .45);
+      backdrop-filter: blur(4px);
+      cursor: pointer;
+      z-index: 8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 300;
+      transition: background .3s, transform .3s;
+      transform: translateZ(40px)
+    }
+
+    .hotspot::after {
+      content: '';
+      position: absolute;
+      inset: -7px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, .35);
+      animation: ping 2.2s infinite
+    }
+
+    @keyframes ping {
+      0% {
+        transform: scale(.7);
+        opacity: 1
+      }
+
+      100% {
+        transform: scale(1.6);
+        opacity: 0
+      }
+    }
+
+    .hotspot:hover {
+      background: var(--lion);
+      color: #000;
+      transform: translateZ(40px) scale(1.15)
+    }
+
+    .hotspot .lbl {
+      position: absolute;
+      bottom: calc(100% + 10px);
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      font-size: 9px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: #fff;
+      background: rgba(0, 0, 0, .7);
+      padding: 6px 12px;
+      border: 1px solid var(--line);
+      opacity: 0;
+      transition: opacity .3s;
+      pointer-events: none
+    }
+
+    .hotspot:hover .lbl {
+      opacity: 1
+    }
+
+    /* --- hood / door panel (rises in 3D) --- */
+    .panel3d {
+      position: absolute;
+      z-index: 9;
+      width: min(320px, 80%);
+      background: linear-gradient(160deg, rgba(14, 14, 20, .96), rgba(8, 8, 12, .96));
+      border: 1px solid var(--line);
+      border-top: 2px solid var(--lion);
+      padding: 26px;
+      transform-origin: bottom center;
+      transform: rotateX(-90deg);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform .7s cubic-bezier(.2, .9, .25, 1.05), opacity .4s;
+      backdrop-filter: blur(8px)
+    }
+
+    .panel3d.open {
+      transform: rotateX(0);
+      opacity: 1;
+      pointer-events: auto
+    }
+
+    .panel3d h4 {
+      font-size: 11px;
+      letter-spacing: .4em;
+      text-transform: uppercase;
+      color: var(--lion);
+      margin-bottom: 16px
+    }
+
+    .panel3d ul {
+      list-style: none
+    }
+
+    .panel3d li {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--line);
+      color: var(--mut)
+    }
+
+    .panel3d li b {
+      color: var(--ink);
+      font-weight: 600
+    }
+
+    .panel3d .x {
+      position: absolute;
+      top: 10px;
+      right: 14px;
+      cursor: pointer;
+      color: var(--mut);
+      font-size: 18px;
+      background: none;
+      border: none
+    }
+
+    .panel3d .x:hover {
+      color: #fff
+    }
+
+    /* ---------- INTERIOR OVERLAY ---------- */
+    #interior {
+      position: fixed;
+      inset: 0;
+      z-index: 150;
+      display: none;
+      perspective: 1000px;
+      background: rgba(0, 0, 0, .4)
+    }
+
+    #interior .room {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background: #000;
+      transform-style: preserve-3d
+    }
+
+    #interior .room img {
+      position: absolute;
+      inset: -6%;
+      width: 112%;
+      height: 112%;
+      object-fit: cover;
+      will-change: transform
+    }
+
+    #interior .room img.tint508 {
+      filter: hue-rotate(95deg) saturate(1.15)
+    }
+
+    #interior .veil {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% 45%, transparent 40%, rgba(0, 0, 0, .75))
+    }
+
+    #interior .hud {
+      position: absolute;
+      left: 48px;
+      bottom: 48px;
+      z-index: 5;
+      max-width: 420px
+    }
+
+    #interior .hud .t {
+      font-size: 11px;
+      letter-spacing: .5em;
+      text-transform: uppercase;
+      color: var(--lion);
+      margin-bottom: 12px
+    }
+
+    #interior .hud h4 {
+      font-size: clamp(30px, 4vw, 52px);
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 14px
+    }
+
+    #interior .hud p {
+      color: #b9b9c2;
+      font-size: 14px;
+      line-height: 1.7
+    }
+
+    #interior .close {
+      position: absolute;
+      top: 34px;
+      right: 44px;
+      z-index: 6;
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, .3);
+      background: rgba(0, 0, 0, .4);
+      color: #fff;
+      font-size: 20px;
+      cursor: pointer;
+      transition: .3s;
+      backdrop-filter: blur(6px)
+    }
+
+    #interior .close:hover {
+      background: var(--lion);
+      color: #000;
+      transform: rotate(90deg)
+    }
+
+    #interior .feat {
+      position: absolute;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      gap: 10px
+    }
+
+    #interior .feat i {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--lion);
+      box-shadow: 0 0 14px var(--lion);
+      animation: ping2 2s infinite
+    }
+
+    @keyframes ping2 {
+      50% {
+        box-shadow: 0 0 26px var(--lion)
+      }
+    }
+
+    #interior .feat s {
+      text-decoration: none;
+      font-size: 10px;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      background: rgba(0, 0, 0, .6);
+      padding: 8px 14px;
+      border: 1px solid var(--line);
+      backdrop-filter: blur(4px)
+    }
+
+    /* ---------- HORIZONTAL GALLERY ---------- */
+    #galleryWrap {
+      position: relative
+    }
+
+    #gallery {
+      display: flex;
+      height: 100vh;
+      align-items: center;
+      width: max-content;
+      padding: 0 8vw;
+      gap: 6vw
+    }
+
+    #gallery .gcard {
+      width: 62vw;
+      max-width: 900px;
+      flex-shrink: 0;
+      position: relative
+    }
+
+    #gallery .gcard img {
+      width: 100%;
+      border-radius: 12px;
+      -webkit-mask-image: radial-gradient(ellipse 85% 78% at 50% 50%, #000 60%, transparent 82%);
+      mask-image: radial-gradient(ellipse 85% 78% at 50% 50%, #000 60%, transparent 82%)
+    }
+
+    #gallery .gcard h5 {
+      position: absolute;
+      bottom: 8%;
+      left: 6%;
+      font-size: clamp(30px, 4vw, 58px);
+      font-weight: 800;
+      mix-blend-mode: difference
+    }
+
+    #gallery .gcard s {
+      text-decoration: none;
+      position: absolute;
+      top: 8%;
+      right: 6%;
+      font-size: 10px;
+      letter-spacing: .4em;
+      text-transform: uppercase;
+      color: var(--lion)
+    }
+
+    .galtitle {
+      padding: 14vh 6vw 4vh
+    }
+
+    .galtitle h3 {
+      font-size: clamp(34px, 5vw, 70px);
+      font-weight: 800
+    }
+
+    .galtitle p {
+      color: var(--mut);
+      margin-top: 12px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      font-size: 11px
+    }
+
+    /* ---------- FOOTER ---------- */
+    footer {
+      padding: 18vh 6vw 8vh;
+      text-align: center;
+      position: relative;
+      overflow: hidden
+    }
+
+    footer h3 {
+      font-size: clamp(40px, 8vw, 120px);
+      font-weight: 800;
+      line-height: .95;
+      margin-bottom: 40px
+    }
+
+    footer h3 em {
+      font-style: normal;
+      color: transparent;
+      -webkit-text-stroke: 1px var(--lion)
+    }
+
+    footer .fine {
+      margin-top: 80px;
+      color: #55555e;
+      font-size: 11px;
+      letter-spacing: .2em;
+      text-transform: uppercase
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(60px)
+    }
+
+    @media(max-width:900px) {
+      .model {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        padding: 14vh 7vw
+      }
+
+      nav ul {
+        display: none
+      }
+
+      #interior .hud {
+        left: 24px;
+        bottom: 24px;
+        right: 24px
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- LOADER -->
+  <div id="loader">
+    <div class="lion">🦁</div>
+    <h1>PEUGEOT</h1>
+    <div class="bar"><i id="loadbar"></i></div>
+  </div>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <div class="logo"><span>🦁</span>PEUGEOT</div>
+    <ul>
+      <li><a href="#m208">208</a></li>
+      <li><a href="#m3008">3008</a></li>
+      <li><a href="#m508">508</a></li>
+      <li><a href="#galleryWrap">Galería</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="bg"></div>
+    <div class="car" id="heroCar">
+      <img
+        src="https://d8j0ntlcm91z4.cloudfront.net/user_3GEECcJUt0HYwjhNmV99y5bdWpj/hf_20260708_165349_f8e3e625-c38d-4767-96ff-fea8046b6ed1.png"
+        alt="Peugeot 208">
+    </div>
+    <div class="title">
+      <div class="kicker">Motion &amp; Emotion</div>
+      <h2>
+        <span class="row"><span>SIENTE</span></span>
+        <span class="row"><span>EL RUGIDO</span></span>
+      </h2>
+    </div>
+    <div class="scrollcue"><i></i>Desliza</div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee">
+    <div class="track">
+      <span>Peugeot 208 <em>—</em> Peugeot 3008 <em>—</em> Peugeot 508 <em>—</em> i-Cockpit® <em>—</em> Allure
+        <em>—</em> </span><span>Peugeot 208 <em>—</em> Peugeot 3008 <em>—</em> Peugeot 508 <em>—</em> i-Cockpit®
+        <em>—</em> Allure <em>—</em> </span>
+    </div>
+  </div>
+
+  <!-- 208 -->
+  <section class="model" id="m208" data-num="01">
+    <div class="info">
+      <div class="tag reveal">Hatchback — Nueva Generación</div>
+      <h3 class="reveal">208 GT<small>El león urbano</small></h3>
+      <p class="reveal">Compacto, eléctrico en alma y feroz en carácter. El 208 redefine la ciudad con líneas de sable
+        luminosas y el i-Cockpit® 3D más inmersivo de su segmento.</p>
+      <div class="specs reveal">
+        <div><b data-count="156"><span>0</span><sup>HP</sup></b><s>Potencia</s></div>
+        <div><b data-count="8" data-dec="1"><span>0</span><sup>s</sup></b><s>0–100 km/h</s></div>
+        <div><b data-count="400"><span>0</span><sup>km</sup></b><s>Autonomía e-208</s></div>
+      </div>
+      <button class="btn reveal" data-interior="208"><span>Entrar al auto</span><span class="arr">→</span></button>
+    </div>
+    <div class="stage">
+      <div class="card">
+        <img class="carimg"
+          src="https://d8j0ntlcm91z4.cloudfront.net/user_3GEECcJUt0HYwjhNmV99y5bdWpj/hf_20260708_165349_f8e3e625-c38d-4767-96ff-fea8046b6ed1.png"
+          alt="Peugeot 208 GT">
+        <div class="glow"></div>
+        <div class="hotspot" style="top:38%;left:30%" data-panel="p208hood">+<span class="lbl">Abrir capó</span></div>
+        <div class="hotspot" style="top:52%;left:62%" data-panel="p208door">+<span class="lbl">Abrir puerta</span></div>
+      </div>
+      <div class="panel3d" id="p208hood" style="top:6%;left:8%">
+        <button class="x">✕</button>
+        <h4>⚙ Bajo el capó</h4>
+        <ul>
+          <li>Motor <b>PureTech 1.2 Turbo</b></li>
+          <li>Potencia <b>156 HP</b></li>
+          <li>Torque <b>260 Nm</b></li>
+          <li>Caja <b>EAT8 Automática</b></li>
+        </ul>
+      </div>
+      <div class="panel3d" id="p208door" style="top:14%;left:44%">
+        <button class="x">✕</button>
+        <h4>🚪 Puerta conductor</h4>
+        <ul>
+          <li>Acceso <b>Keyless full</b></li>
+          <li>Retrovisor <b>Eléctrico abatible</b></li>
+          <li>Iluminación <b>LED de cortesía</b></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3008 -->
+  <section class="model" id="m3008" data-num="02" style="grid-template-columns:1fr 1fr;background:var(--bg2)">
+    <div class="stage" style="order:1">
+      <div class="card">
+        <img class="carimg"
+          src="https://d8j0ntlcm91z4.cloudfront.net/user_3GEECcJUt0HYwjhNmV99y5bdWpj/hf_20260708_165400_6d442b9b-ec72-4064-9ae3-be8029d69421.png"
+          alt="Peugeot 3008 GT">
+        <div class="glow"></div>
+        <div class="hotspot" style="top:40%;left:26%" data-panel="p3008hood">+<span class="lbl">Abrir capó</span></div>
+        <div class="hotspot" style="top:50%;left:66%" data-panel="p3008door">+<span class="lbl">Abrir puerta</span>
+        </div>
+      </div>
+      <div class="panel3d" id="p3008hood" style="top:4%;left:6%">
+        <button class="x">✕</button>
+        <h4>⚙ Bajo el capó</h4>
+        <ul>
+          <li>Motor <b>Hybrid 225 e-DCS6</b></li>
+          <li>Potencia <b>225 HP</b></li>
+          <li>Tracción <b>Delantera</b></li>
+          <li>Modo <b>100% eléctrico</b></li>
+        </ul>
+      </div>
+      <div class="panel3d" id="p3008door" style="top:12%;left:42%">
+        <button class="x">✕</button>
+        <h4>🚪 Puerta conductor</h4>
+        <ul>
+          <li>Acceso <b>Proximidad</b></li>
+          <li>Asiento <b>Masaje + memoria</b></li>
+          <li>Ambiente <b>LED 8 colores</b></li>
+        </ul>
+      </div>
+    </div>
+    <div class="info" style="order:2;justify-self:end">
+      <div class="tag reveal">SUV — Fastback</div>
+      <h3 class="reveal">3008 GT<small>El instinto elevado</small></h3>
+      <p class="reveal">Silueta fastback, panel curvo panorámico de 21" y una postura que domina. El nuevo 3008 no sigue
+        el camino: lo dibuja.</p>
+      <div class="specs reveal">
+        <div><b data-count="225"><span>0</span><sup>HP</sup></b><s>Híbrido</s></div>
+        <div><b data-count="21"><span>0</span><sup>"</sup></b><s>Pantalla curva</s></div>
+        <div><b data-count="588"><span>0</span><sup>L</sup></b><s>Baúl</s></div>
+      </div>
+      <button class="btn reveal" data-interior="3008"><span>Entrar al auto</span><span class="arr">→</span></button>
+    </div>
+  </section>
+
+  <!-- 508 -->
+  <section class="model" id="m508" data-num="03">
+    <div class="info">
+      <div class="tag reveal">Sedán — Peugeot Sport Engineered</div>
+      <h3 class="reveal">508 PSE<small>La elegancia radical</small></h3>
+      <p class="reveal">El Peugeot más potente de la historia. Fastback, híbrido enchufable y afinado por Peugeot Sport.
+        Verde criptonita corriendo por las venas.</p>
+      <div class="specs reveal">
+        <div><b data-count="360"><span>0</span><sup>HP</sup></b><s>PHEV Total</s></div>
+        <div><b data-count="5" data-dec="2"><span>0</span><sup>s</sup></b><s>0–100 km/h</s></div>
+        <div><b data-count="250"><span>0</span><sup>km/h</sup></b><s>Vel. máxima</s></div>
+      </div>
+      <button class="btn reveal" data-interior="508"><span>Entrar al auto</span><span class="arr">→</span></button>
+    </div>
+    <div class="stage">
+      <div class="card">
+        <img class="carimg"
+          src="https://d8j0ntlcm91z4.cloudfront.net/user_3GEECcJUt0HYwjhNmV99y5bdWpj/hf_20260708_165404_47c1afe6-fbc6-4868-bd67-5de0c05fd438.png"
+          alt="Peugeot 508 PSE">
+        <div class="glow" style="background:radial-gradient(ellipse at center,rgba(0,229,160,.2),transparent 70%)">
+        </div>
+        <div class="hotspot" style="top:36%;left:64%" data-panel="p508hood">+<span class="lbl">Abrir capó</span></div>
+        <div class="hotspot" style="top:52%;left:38%" data-panel="p508door">+<span class="lbl">Abrir puerta</span></div>
+      </div>
+      <div class="panel3d" id="p508hood" style="top:2%;left:40%">
+        <button class="x">✕</button>
+        <h4>⚙ Bajo el capó</h4>
+        <ul>
+          <li>Motor <b>1.6 THP + 2 eléctricos</b></li>
+          <li>Potencia <b>360 HP combinados</b></li>
+          <li>Tracción <b>Integral 4WD</b></li>
+          <li>Frenos <b>380 mm perforados</b></li>
+        </ul>
+      </div>
+      <div class="panel3d" id="p508door" style="top:12%;left:12%">
+        <button class="x">✕</button>
+        <h4>🚪 Puerta conductor</h4>
+        <ul>
+          <li>Marco <b>Sin marco (frameless)</b></li>
+          <li>Asiento <b>Nappa + Alcántara</b></li>
+          <li>Costuras <b>Kryptonite</b></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <div class="galtitle">
+    <h3>La manada completa.</h3>
+    <p>Desliza — la galería se mueve contigo</p>
+  </div>
+  <div id="galleryWrap">
+    <div id="gallery">
+      <div class="gcard"><img
+          src="https://d8j0ntlcm91z4.cloudfront.net/user_3GEECcJUt0HYwjhNmV99y5bdWpj/hf_20260708_165349_f8e3e625-c38d-4767-96ff-fea8046b6ed1.png"
+          alt="208">
+        <h5>208 GT</h5><s>Urbano</s>
+      </div>
+      <div class="gcard"><img
+          src="https://d8j0ntlcm91z4.cloudfront.net/user_3GEECcJUt0HYwjhNmV99y5bdWpj/hf_20260708_165400_6d442b9b-ec72-4064-9ae3-be8029d69421.png"
+          alt="3008">
+        <h5>3008 GT</h5><s>SUV Fastback</s>
+      </div>
+      <div class="gcard"><img
+          src="https://d8j0ntlcm91z4.cloudfront.net/user_3GEECcJUt0HYwjhNmV99y5bdWpj/hf_20260708_165404_47c1afe6-fbc6-4868-bd67-5de0c05fd438.png"
+          alt="508">
+        <h5>508 PSE</h5><s>Sport Engineered</s>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <h3 class="reveal">DEJA QUE EL LEÓN<br><em>TE ELIJA</em></h3>
+  </footer>
+
+  <!-- INTERIOR OVERLAY -->
+  <div id="interior">
+    <div class="room" id="room">
+      <img id="roomImg" src="" alt="Interior">
+      <div class="veil"></div>
+      <button class="close" id="closeInt">✕</button>
+      <div class="feat" id="feat1"><i></i><s></s></div>
+      <div class="feat" id="feat2"><i></i><s></s></div>
+      <div class="hud">
+        <div class="t">Estás dentro — i-Cockpit®</div>
+        <h4 id="intTitle"></h4>
+        <p id="intDesc"></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    /* ---------- LOADER ---------- */
+    const loadTl = gsap.timeline();
+    loadTl.to('#loadbar', { width: '100%', duration: 1.4, ease: 'power2.inOut' })
+      .to('#loader', { yPercent: -100, duration: .9, ease: 'power4.inOut' }, '+=.15')
+      .add(() => { document.getElementById('nav').classList.add('on'); document.getElementById('loader').style.display = 'none'; })
+      .to('#hero .title h2 .row span', { y: 0, duration: 1.1, ease: 'power4.out', stagger: .12 }, '-=.5')
+      .from('#heroCar img', { scale: 1.25, opacity: 0, duration: 1.6, ease: 'power3.out' }, '-=1');
+
+    /* ---------- HERO scroll: car escapes in 3D ---------- */
+    gsap.to('#heroCar', {
+      scale: 1.5, yPercent: 18, rotateX: 8, opacity: 0, ease: 'none',
+      scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true }
+    });
+    gsap.to('#hero .title', {
+      yPercent: -120, opacity: 0, ease: 'none',
+      scrollTrigger: { trigger: '#hero', start: 'top top', end: '60% top', scrub: true }
+    });
+
+    /* ---------- Reveal on scroll ---------- */
+    document.querySelectorAll('.reveal').forEach(el => {
+      gsap.to(el, {
+        opacity: 1, y: 0, duration: 1, ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 85%' }
+      });
+    });
+
+    /* ---------- Model sections: 3D scroll entrance ---------- */
+    document.querySelectorAll('.model .stage').forEach(st => {
+      gsap.from(st.querySelector('.card'), {
+        rotateY: -24, rotateX: 10, z: -180, opacity: 0, duration: 1, ease: 'power2.out',
+        scrollTrigger: { trigger: st, start: 'top 80%', end: 'top 35%', scrub: 1 }
+      });
+    });
+
+    /* ---------- Counters ---------- */
+    document.querySelectorAll('[data-count]').forEach(el => {
+      const target = parseFloat(el.dataset.count), dec = el.dataset.dec ? 1 : 0;
+      const span = el.querySelector('span');
+      const val = dec ? (el.dataset.dec === '1' ? 8.1 : 5.2) : target;
+      ScrollTrigger.create({
+        trigger: el, start: 'top 85%', once: true, onEnter: () => {
+          gsap.to({ n: 0 }, {
+            n: val, duration: 1.6, ease: 'power2.out', onUpdate: function () {
+              span.textContent = dec ? this.targets()[0].n.toFixed(1) : Math.round(this.targets()[0].n);
+            }
+          });
+        }
+      });
+    });
+
+    /* ---------- 3D tilt on mousemove ---------- */
+    document.querySelectorAll('.stage').forEach(st => {
+      const card = st.querySelector('.card');
+      st.addEventListener('mousemove', e => {
+        const r = st.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+        card.style.transform = `rotateY(${x * 14}deg) rotateX(${-y * 10}deg) translateZ(10px)`;
+      });
+      st.addEventListener('mouseleave', () => { card.style.transform = 'rotateY(0) rotateX(0)'; });
+    });
+
+    /* ---------- Hotspots → 3D panels (capó / puertas) ---------- */
+    document.querySelectorAll('.hotspot').forEach(h => {
+      h.addEventListener('click', e => {
+        e.stopPropagation();
+        const panel = document.getElementById(h.dataset.panel);
+        document.querySelectorAll('.panel3d.open').forEach(p => { if (p !== panel) p.classList.remove('open') });
+        panel.classList.toggle('open');
+        if (panel.classList.contains('open')) {
+          const card = h.closest('.stage').querySelector('.card');
+          gsap.fromTo(card, { rotateX: 0 }, { rotateX: -6, yoyo: true, repeat: 1, duration: .4, ease: 'power2.inOut' });
+        }
+      });
+    });
+    document.querySelectorAll('.panel3d .x').forEach(x => x.addEventListener('click', () => x.closest('.panel3d').classList.remove('open')));
+    document.addEventListener('click', e => {
+      if (!e.target.closest('.panel3d') && !e.target.closest('.hotspot'))
+        document.querySelectorAll('.panel3d.open').forEach(p => p.classList.remove('open'));
+    });
+
+    /* ---------- Enter the car (interior 3D zoom) ---------- */
+    const interiors = {
+      '208': {
+        img: 'https://d8j0ntlcm91z4.cloudfront.net/user_3GEECcJUt0HYwjhNmV99y5bdWpj/hf_20260708_165358_6571db2d-8cde-49e9-9b08-386923ce82e5.png',
+        t: '208 GT — i-Cockpit® 3D', d: 'Cluster holográfico en dos niveles, volante compacto y luz ambiente que respira contigo. Mueve el mouse para mirar alrededor.',
+        f1: { top: '34%', left: '30%', l: 'Cluster 3D holográfico' }, f2: { top: '58%', left: '60%', l: 'Volante compacto GT' }, tint: false
+      },
+      '3008': {
+        img: 'https://d8j0ntlcm91z4.cloudfront.net/user_3GEECcJUt0HYwjhNmV99y5bdWpj/hf_20260708_165402_33583cff-5852-4d0f-8142-6b43d5dfe2cf.png',
+        t: '3008 GT — Panoramic i-Cockpit®', d: 'Pantalla curva flotante de 21 pulgadas, materiales cálidos y una cabina que envuelve. Mueve el mouse para mirar alrededor.',
+        f1: { top: '30%', left: '42%', l: 'Panel curvo 21"' }, f2: { top: '62%', left: '26%', l: 'i-Toggles táctiles' }, tint: false
+      },
+      '508': {
+        img: 'https://d8j0ntlcm91z4.cloudfront.net/user_3GEECcJUt0HYwjhNmV99y5bdWpj/hf_20260708_165358_6571db2d-8cde-49e9-9b08-386923ce82e5.png',
+        t: '508 PSE — Sport Cockpit', d: 'Ambiente kryptonite, Nappa con Alcántara y modos de conducción Sport y 4WD al alcance del pulgar. Mueve el mouse para mirar alrededor.',
+        f1: { top: '36%', left: '34%', l: 'Modo Sport PSE' }, f2: { top: '56%', left: '62%', l: 'Costuras kryptonite' }, tint: true
+      }
+    };
+    const ovl = document.getElementById('interior'), room = document.getElementById('room'), rimg = document.getElementById('roomImg');
+    let inInterior = false;
+
+    document.querySelectorAll('[data-interior]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const d = interiors[btn.dataset.interior];
+        rimg.src = d.img; rimg.className = d.tint ? 'tint508' : '';
+        document.getElementById('intTitle').textContent = d.t;
+        document.getElementById('intDesc').textContent = d.d;
+        const f1 = document.getElementById('feat1'), f2 = document.getElementById('feat2');
+        f1.style.top = d.f1.top; f1.style.left = d.f1.left; f1.querySelector('s').textContent = d.f1.l;
+        f2.style.top = d.f2.top; f2.style.left = d.f2.left; f2.querySelector('s').textContent = d.f2.l;
+        ovl.style.display = 'block'; inInterior = true;
+        document.body.style.overflow = 'hidden';
+        gsap.fromTo(room, { scale: .25, rotateX: 18, opacity: 0, filter: 'blur(14px)' },
+          { scale: 1, rotateX: 0, opacity: 1, filter: 'blur(0px)', duration: 1.1, ease: 'power3.out' });
+        gsap.fromTo('#interior .hud > *', { y: 40, opacity: 0 }, { y: 0, opacity: 1, stagger: .12, duration: .8, delay: .5, ease: 'power3.out' });
+        gsap.fromTo('#interior .feat', { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, stagger: .2, delay: .8, duration: .5, ease: 'back.out(2)' });
+      });
+    });
+    function closeInterior() {
+      gsap.to(room, {
+        scale: .3, opacity: 0, rotateX: -14, filter: 'blur(10px)', duration: .6, ease: 'power3.in', onComplete: () => {
+          ovl.style.display = 'none'; document.body.style.overflow = ''; inInterior = false;
+          room.style.filter = '';
+        }
+      });
+    }
+    document.getElementById('closeInt').addEventListener('click', closeInterior);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && inInterior) closeInterior() });
+
+    /* look-around parallax inside the car */
+    document.addEventListener('mousemove', e => {
+      if (!inInterior) return;
+      const x = (e.clientX / innerWidth - .5), y = (e.clientY / innerHeight - .5);
+      gsap.to(rimg, { x: -x * 50, y: -y * 30, rotateY: x * 3, duration: .8, ease: 'power2.out' });
+    });
+
+    /* ---------- Horizontal gallery ---------- */
+    const gal = document.getElementById('gallery');
+    gsap.to(gal, {
+      x: () => -(gal.scrollWidth - innerWidth), ease: 'none',
+      scrollTrigger: {
+        trigger: '#galleryWrap', start: 'top top', end: () => '+=' + (gal.scrollWidth - innerWidth),
+        pin: true, scrub: 1, invalidateOnRefresh: true
+      }
+    });
+    gsap.utils.toArray('#gallery .gcard img').forEach(img => {
+      gsap.fromTo(img, { scale: 1.15 }, {
+        scale: 1, ease: 'none',
+        scrollTrigger: { trigger: '#galleryWrap', start: 'top bottom', end: 'bottom top', scrub: true, containerAnimation: undefined }
+      });
+    });
+
+    /* smooth anchor scroll */
+    document.querySelectorAll('nav a').forEach(a => a.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelector(a.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+    }));
+  </script>
+</body>
+
+</html>
